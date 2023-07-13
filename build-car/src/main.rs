@@ -31,8 +31,9 @@ fn car_factory(order: i32, miles: u32) -> Car {
     let colors = ["Blue", "Green", "Red", "Silver"];
 
     let mut color = order as usize;
-    if color > 4 {
-        color = color - 4;
+
+    while color > 4 {
+        color -= 4;
     }
 
     let mut motor = Transmission::Manual;
@@ -46,8 +47,8 @@ fn car_factory(order: i32, miles: u32) -> Car {
 
     Car {
         color: String::from(colors[(color - 1) as usize]),
-        motor: motor,
-        roof: roof,
+        motor,
+        roof,
         age: car_quality(miles),
     }
 }
@@ -55,36 +56,20 @@ fn car_factory(order: i32, miles: u32) -> Car {
 use std::collections::HashMap;
 
 fn main() {
-    let mut order = 1;
+    let mut miles = 0;
     let mut car: Car;
 
     let mut orders: HashMap<i32, Car> = HashMap::new();
 
-    car = car_factory(order, 1000);
-    orders.insert(order, car);
+    for order in 1..12 {
+        car = car_factory(order, miles);
+        orders.insert(order, car);
+        println!("Car order {}: {:?}", order, orders.get(&order));
 
-    order = order + 1;
-    car = car_factory(order, 2000);
-    orders.insert(order, car);
-    println!("Car order {}: {:?}", order, orders.get(&order));
-
-    order = order + 1;
-    car = car_factory(order, 0);
-    orders.insert(order, car);
-    println!("Car order {}: {:?}", order, orders.get(&order));
-
-    order = order + 1;
-    car = car_factory(order, 0);
-    orders.insert(order, car);
-    println!("Car order {}: {:?}", order, orders.get(&order));
-
-    order = order + 1;
-    car = car_factory(order, 3000);
-    orders.insert(order, car);
-    println!("Car order {}: {:?}", order, orders.get(&order));
-
-    order = order + 1;
-    car = car_factory(order, 4000);
-    orders.insert(order, car);
-    println!("Car order {}: {:?}", order, orders.get(&order));
+        if miles == 2100 {
+            miles = 0;
+        } else {
+            miles += 700;
+        }
+    }
 }
