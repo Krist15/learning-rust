@@ -1,48 +1,90 @@
 #[derive(PartialEq, Debug)]
-struct Car { color: String, motor: Transmission, roof: bool, age: (Age, u32) }
+struct Car {
+    color: String,
+    motor: Transmission,
+    roof: bool,
+    age: (Age, u32),
+}
 
 #[derive(PartialEq, Debug)]
-enum Transmission { Manual, SemiAuto, Automatic }
+enum Transmission {
+    Manual,
+    SemiAuto,
+    Automatic,
+}
 
 #[derive(PartialEq, Debug)]
-enum Age { New, Used }
+enum Age {
+    New,
+    Used,
+}
 
-fn car_quality (miles: u32) -> (Age, u32) {
-
+fn car_quality(miles: u32) -> (Age, u32) {
     if miles > 0 {
         return (Age::Used, miles);
     }
 
     (Age::New, miles)
 }
-fn car_factory(color: String, motor: Transmission, roof: bool, miles: u32) -> Car {
 
-    if car_quality(miles).0 == Age::Used {
-        if roof {
-            println!("Preparing a used car: {:?}, {}, Hard top, {} miles", motor, color, miles);
-        }else {
-            println!("Preparing a used car: {:?}, {}, Convertible, {} miles", motor, color, miles);
-        }
-    }else {
-        if roof {
-            println!("Preparing a new car: {:?}, {}, Hard top, {} miles", motor, color, miles);
-        }else {
-            println!("Preparing a new car: {:?}, {}, Convertible, {} miles", motor, color, miles);
-        }
+fn car_factory(order: i32, miles: u32) -> Car {
+    let colors = ["Blue", "Green", "Red", "Silver"];
+
+    let mut color = order as usize;
+    if color > 4 {
+        color = color - 4;
+    }
+
+    let mut motor = Transmission::Manual;
+    let mut roof = true;
+    if order % 3 == 0 {
+        motor = Transmission::Automatic;
+    } else if order % 2 == 0 {
+        motor = Transmission::SemiAuto;
+        roof = false;
     }
 
     Car {
-        color,
-        motor,
-        roof,
-        age: car_quality(miles)
+        color: String::from(colors[(color - 1) as usize]),
+        motor: motor,
+        roof: roof,
+        age: car_quality(miles),
     }
 }
 
+use std::collections::HashMap;
+
 fn main() {
-    car_factory(String::from("Orange"), Transmission::Manual, true, 0);
+    let mut order = 1;
+    let mut car: Car;
 
-    car_factory(String::from("Red"), Transmission::SemiAuto, false, 565);
+    let mut orders: HashMap<i32, Car> = HashMap::new();
 
-    car_factory(String::from("White"), Transmission::Automatic, true, 3000);
+    car = car_factory(order, 1000);
+    orders.insert(order, car);
+
+    order = order + 1;
+    car = car_factory(order, 2000);
+    orders.insert(order, car);
+    println!("Car order {}: {:?}", order, orders.get(&order));
+
+    order = order + 1;
+    car = car_factory(order, 0);
+    orders.insert(order, car);
+    println!("Car order {}: {:?}", order, orders.get(&order));
+
+    order = order + 1;
+    car = car_factory(order, 0);
+    orders.insert(order, car);
+    println!("Car order {}: {:?}", order, orders.get(&order));
+
+    order = order + 1;
+    car = car_factory(order, 3000);
+    orders.insert(order, car);
+    println!("Car order {}: {:?}", order, orders.get(&order));
+
+    order = order + 1;
+    car = car_factory(order, 4000);
+    orders.insert(order, car);
+    println!("Car order {}: {:?}", order, orders.get(&order));
 }
