@@ -11,7 +11,7 @@ fn build_full_name(person: &Person) -> String {
 
     if let Some(middle) = &person.middle {
         full_name.push_str(&middle);
-        full_name.push_str(" ")
+        full_name.push_str(" ");
     }
 
     full_name.push_str(&person.last);
