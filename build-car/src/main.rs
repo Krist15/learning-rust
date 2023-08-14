@@ -30,6 +30,9 @@ fn car_quality(miles: u32) -> (Age, u32) {
 fn car_factory(order: i32, miles: u32) -> Car {
     let colors = ["Blue", "Green", "Red", "Silver"];
 
+    let n = 5;
+    let a = "Hola";
+
     let mut color = order as usize;
 
     while color > 4 {
